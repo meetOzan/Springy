@@ -1,0 +1,4 @@
+jdk:
+   - openjkd11
+before_install:
+  - ./scripts/prepareJitpackEnvironment.sh

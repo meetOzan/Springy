@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.maven.publish)
 }
 
 android {
@@ -43,4 +44,18 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.animation.core)
     implementation(libs.compose.foundation)
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication> ("release") {
+                from(components["release"])
+
+                groupId = "com.github.meetOzan"
+                artifactId = "quick-animation-ext"
+                version = "0.0.1"
+            }
+        }
+    }
 }
