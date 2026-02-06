@@ -5,12 +5,15 @@ package com.meetozan.quick_animation_ext
 */
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -18,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import kotlinx.coroutines.delay
 
 
 /**
@@ -56,10 +60,7 @@ fun Modifier.clickBounceEffect(
             awaitPointerEventScope {
                 while (true) {
                     awaitFirstDown(requireUnconsumed = false)
-                    isPressed = true
-
                     waitForUpOrCancellation()
-                    isPressed = false
                 }
             }
         }
@@ -128,4 +129,72 @@ private fun Modifier.baseShake(
             translationY = animatable.value
         }
     }
+}
+
+@Suppress("AvoidComposed")
+fun Modifier.heartBeat(
+    trigger: Any? = null,
+    durationMillis: Int = 600,
+    scaleUp: Float = 1.20f,
+    scaleDown: Float = 1f,
+    isInfinite: Boolean = false,
+    isOnRealHeartBeatEffect: Boolean = false,
+    onAnimationEnd: (() -> Unit)? = null
+) : Modifier = composed {
+    val scale = remember { Animatable(1f) }
+
+    val heartBeatEasing = CubicBezierEasing(
+        0.4f, 0.0f,
+        0.2f, 1.0f
+    )
+    LaunchedEffect(trigger) {
+        if (isInfinite) {
+            while (true) {
+                if (isOnRealHeartBeatEffect) {
+                    scale.animateTo(scaleUp, tween(durationMillis/5, easing = heartBeatEasing))
+                    scale.animateTo(scaleDown, tween(durationMillis/3, easing = heartBeatEasing))
+                    delay(120)
+                    scale.animateTo(scaleUp-(scaleUp/14), tween(durationMillis/6, easing = heartBeatEasing))
+                    scale.animateTo(scaleDown, tween(durationMillis/4, easing = heartBeatEasing))
+                    delay(600)
+                } else {
+                    scale.animateTo(
+                        targetValue = scaleUp,
+                        animationSpec = tween(durationMillis / 2)
+                    )
+                    scale.animateTo(
+                        targetValue = scaleDown,
+                        animationSpec = tween(durationMillis / 2)
+                    )
+                }
+            }
+        } else {
+            if (isOnRealHeartBeatEffect) {
+                scale.animateTo(scaleUp, tween(durationMillis/5, easing = heartBeatEasing))
+                scale.animateTo(scaleDown, tween(durationMillis/3, easing = heartBeatEasing))
+                delay(120)
+                scale.animateTo(scaleUp-(scaleUp/14), tween(durationMillis/6, easing = heartBeatEasing))
+                scale.animateTo(scaleDown, tween(durationMillis/4, easing = heartBeatEasing))
+                delay(600)
+            } else {
+                scale.animateTo(
+                    targetValue = scaleUp,
+                    animationSpec = tween(
+                        durationMillis / 2,
+                    )
+                )
+                scale.animateTo(
+                    targetValue = scaleDown,
+                    animationSpec = tween(durationMillis / 2)
+                )
+            }
+        }
+        onAnimationEnd?.invoke()
+    }
+
+    this
+        .graphicsLayer {
+            scaleX = scale.value
+            scaleY = scale.value
+        }
 }
