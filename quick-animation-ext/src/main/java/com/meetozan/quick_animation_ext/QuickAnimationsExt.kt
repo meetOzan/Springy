@@ -6,6 +6,7 @@ package com.meetozan.quick_animation_ext
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.tween
@@ -65,6 +66,30 @@ fun Modifier.clickBounceEffect(
         }
 }
 
+/**
+ *  A modifier that adds a shake effect to the composable with basing [Modifier.baseShake].
+ *
+ *  The shake can be either **vertical** [Modifier.shakeVertical].
+ *
+ * @param trigger An optional parameter that can be used to trigger the shake animation. Whenever this value changes, the shake animation will be executed.
+ * @param durationMillis The duration of the shake animation in milliseconds. Default is 500ms
+ * @param intensity The intensity of the shake, which determines how far the composable will move during the shake. Default is 20f (20 pixels).
+ * @param onAnimationEnd An optional callback that will be invoked when the shake animation ends.
+ * Usage:
+ * ```
+ * Box(
+ *    modifier = Modifier
+ *    .shakeHorizontal(trigger = shakeTrigger)
+ *    .size(100.dp)
+ *    .background(Color.Red)
+ *    )
+ *    Button(onClick = { shakeTrigger = !shakeTrigger }) {
+ *    Text("Shake")
+ *    }
+ * ```
+ * Note: The `trigger` parameter can be any value (e.g., a boolean, an integer, etc.) that changes when you want to trigger the shake animation. In the example above, we toggle a boolean `shakeTrigger` to trigger the shake effect when the button is clicked.
+ *
+ */
 fun Modifier.shakeHorizontal(
     trigger: Any? = null,
     durationMillis: Int = 500,
@@ -78,6 +103,31 @@ fun Modifier.shakeHorizontal(
     onAnimationEnd = onAnimationEnd
 )
 
+
+/**
+ * A modifier that adds a shake effect to the composable with basing [Modifier.baseShake].
+ *
+ * The shake can be either **horizontal** [Modifier.shakeHorizontal].
+ *
+ * @param trigger An optional parameter that can be used to trigger the shake animation. Whenever this value changes, the shake animation will be executed.
+ * @param durationMillis The duration of the shake animation in milliseconds. Default is 500ms
+ * @param intensity The intensity of the shake, which determines how far the composable will move during the shake. Default is 20f (20 pixels).
+ * @param onAnimationEnd An optional callback that will be invoked when the shake animation ends.
+ * Usage:
+ * ```
+ * Box(
+ *    modifier = Modifier
+ *    .shakeVertical(trigger = shakeTrigger)
+ *    .size(100.dp)
+ *    .background(Color.Red)
+ *    )
+ *    Button(onClick = { shakeTrigger = !shakeTrigger }) {
+ *    Text("Shake")
+ *    }
+ * ```
+ * Note: The `trigger` parameter can be any value (e.g., a boolean, an integer, etc.) that changes when you want to trigger the shake animation. In the example above, we toggle a boolean `shakeTrigger` to trigger the shake effect when the button is clicked.
+ *
+ */
 fun Modifier.shakeVertical(
     trigger: Any? = null,
     durationMillis: Int = 500,
@@ -237,4 +287,51 @@ private fun Modifier.baseHeartBeat(
             scaleX = scale.value
             scaleY = scale.value
         }
+}
+
+/**
+ * A modifier that adds a wiggle effect to the composable.
+ * The composable will rotate back and forth around the Z-axis, creating a wiggle effect.
+ *
+ * @param enabled An optional parameter that can be used to trigger the wiggle animation. Whenever this value changes to true, the wiggle animation will be executed.
+ * @param durationMillis The duration of the wiggle animation in milliseconds. Default is 300
+ * @param rotationAngle The maximum rotation angle in degrees for the wiggle effect. Default is 5f (5 degrees).
+ * Usage:
+ * ```
+ * Button(
+ *     modifier = Modifier.wiggle(enabled = isWiggling),
+ *     onClick = { isWiggling = true }
+ * ) {
+ *     Text("Wiggle Me")
+ * }
+ * ```
+ * Note: The `enabled` parameter can be any value (e.g., a boolean, an integer, etc.) that changes when you want to trigger the wiggle animation. In the example above, we set a boolean `isWiggling` to true to trigger the wiggle effect
+ */
+@Suppress("AvoidComposed")
+fun Modifier.wiggle(
+    enabled: Boolean,
+    durationMillis: Int = 300,
+    rotationAngle: Float = 5f
+): Modifier = composed {
+    val rotationAnim = remember { Animatable(0f) }
+
+    LaunchedEffect(enabled) {
+        if (enabled) {
+            rotationAnim.snapTo(0f)
+            rotationAnim.animateTo(
+                targetValue = 0f,
+                animationSpec = keyframes {
+                    this.durationMillis = durationMillis
+                    0f at 0
+                    -rotationAngle at (durationMillis * 0.25f).toInt() // Sola yat
+                    rotationAngle at (durationMillis * 0.75f).toInt()  // Sağa yat
+                    0f at durationMillis
+                }
+            )
+        }
+    }
+
+    this.graphicsLayer {
+        rotationZ = rotationAnim.value
+    }
 }
