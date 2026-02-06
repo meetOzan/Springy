@@ -13,7 +13,6 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -131,8 +130,43 @@ private fun Modifier.baseShake(
     }
 }
 
+fun Modifier.scaleUpDown(
+    trigger: Any? = null,
+    durationMillis: Int = 600,
+    scaleUp: Float = 1.20f,
+    scaleDown: Float = 1f,
+    isInfinite: Boolean = false,
+    onAnimationEnd: (() -> Unit)? = null
+): Modifier = this.baseHeartBeat(
+    trigger = trigger,
+    durationMillis = durationMillis,
+    scaleUp = scaleUp,
+    scaleDown = scaleDown,
+    isInfinite = isInfinite,
+    isOnRealHeartBeatEffect = false,
+    onAnimationEnd = onAnimationEnd
+)
+
+fun Modifier.heartBeatEffect(
+    trigger: Any? = null,
+    durationMillis: Int = 600,
+    scaleUp: Float = 1.20f,
+    scaleDown: Float = 1f,
+    isInfinite: Boolean = false,
+    onAnimationEnd: (() -> Unit)? = null
+): Modifier = this.baseHeartBeat(
+    trigger = trigger,
+    durationMillis = durationMillis,
+    scaleUp = scaleUp,
+    scaleDown = scaleDown,
+    isInfinite = isInfinite,
+    isOnRealHeartBeatEffect = true,
+    onAnimationEnd = onAnimationEnd
+)
+
+
 @Suppress("AvoidComposed")
-fun Modifier.heartBeat(
+private fun Modifier.baseHeartBeat(
     trigger: Any? = null,
     durationMillis: Int = 600,
     scaleUp: Float = 1.20f,
@@ -140,7 +174,7 @@ fun Modifier.heartBeat(
     isInfinite: Boolean = false,
     isOnRealHeartBeatEffect: Boolean = false,
     onAnimationEnd: (() -> Unit)? = null
-) : Modifier = composed {
+): Modifier = composed {
     val scale = remember { Animatable(1f) }
 
     val heartBeatEasing = CubicBezierEasing(
@@ -151,11 +185,14 @@ fun Modifier.heartBeat(
         if (isInfinite) {
             while (true) {
                 if (isOnRealHeartBeatEffect) {
-                    scale.animateTo(scaleUp, tween(durationMillis/5, easing = heartBeatEasing))
-                    scale.animateTo(scaleDown, tween(durationMillis/3, easing = heartBeatEasing))
+                    scale.animateTo(scaleUp, tween(durationMillis / 5, easing = heartBeatEasing))
+                    scale.animateTo(scaleDown, tween(durationMillis / 3, easing = heartBeatEasing))
                     delay(120)
-                    scale.animateTo(scaleUp-(scaleUp/14), tween(durationMillis/6, easing = heartBeatEasing))
-                    scale.animateTo(scaleDown, tween(durationMillis/4, easing = heartBeatEasing))
+                    scale.animateTo(
+                        scaleUp - (scaleUp / 14),
+                        tween(durationMillis / 6, easing = heartBeatEasing)
+                    )
+                    scale.animateTo(scaleDown, tween(durationMillis / 4, easing = heartBeatEasing))
                     delay(600)
                 } else {
                     scale.animateTo(
@@ -170,11 +207,14 @@ fun Modifier.heartBeat(
             }
         } else {
             if (isOnRealHeartBeatEffect) {
-                scale.animateTo(scaleUp, tween(durationMillis/5, easing = heartBeatEasing))
-                scale.animateTo(scaleDown, tween(durationMillis/3, easing = heartBeatEasing))
+                scale.animateTo(scaleUp, tween(durationMillis / 5, easing = heartBeatEasing))
+                scale.animateTo(scaleDown, tween(durationMillis / 3, easing = heartBeatEasing))
                 delay(120)
-                scale.animateTo(scaleUp-(scaleUp/14), tween(durationMillis/6, easing = heartBeatEasing))
-                scale.animateTo(scaleDown, tween(durationMillis/4, easing = heartBeatEasing))
+                scale.animateTo(
+                    scaleUp - (scaleUp / 14),
+                    tween(durationMillis / 6, easing = heartBeatEasing)
+                )
+                scale.animateTo(scaleDown, tween(durationMillis / 4, easing = heartBeatEasing))
                 delay(600)
             } else {
                 scale.animateTo(
