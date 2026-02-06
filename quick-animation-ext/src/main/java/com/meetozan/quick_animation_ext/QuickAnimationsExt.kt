@@ -335,3 +335,70 @@ fun Modifier.wiggle(
         rotationZ = rotationAnim.value
     }
 }
+
+enum class SpinSide {
+    CLOCKWISE,
+    COUNTERCLOCKWISE
+}
+
+/**
+ * A modifier that adds a spin animation to the composable.
+ *
+ * @param trigger An optional parameter that can be used to trigger the spin animation. Whenever this value changes, the spin animation will be executed.
+ * @param durationMillis The duration of one full rotation in milliseconds. Default is 1000ms (1 second).
+ * @param repeatCount The number of times the spin animation should repeat. Default is 1 (no repetition).
+ * @param rotationAngle The angle in degrees for one full rotation. Default is 360f (full circle).
+ * @param isInfinite If true, the spin animation will repeat indefinitely. Default is false.
+ * @param side The direction of the spin, either clockwise or counterclockwise that managed with [SpinSide].
+ * Default is [SpinSide.CLOCKWISE].
+ *
+ * Usage:
+ * ```
+ * Button(
+ *     modifier = Modifier.spin(trigger = spinTrigger),
+ *     onClick = { spinTrigger = !spinTrigger }
+ * ) {
+ *     Text("Spin Me")
+ * }
+ * ```
+ *
+ * Note: The `trigger` parameter can be any value (e.g., a boolean, an integer, etc.) that changes when you want to trigger the spin animation. In the example above, we toggle a boolean `spinTrigger` to trigger the spin effect when the button is clicked.
+ */
+@Suppress("AvoidComposed")
+fun Modifier.spin(
+    trigger: Any? = null,
+    durationMillis: Int = 1000,
+    repeatCount: Int = 1,
+    rotationAngle: Float = 360f,
+    isInfinite: Boolean = false,
+    side: SpinSide = SpinSide.CLOCKWISE,
+): Modifier = composed {
+    val rotationAnim = remember { Animatable(0f) }
+
+    suspend fun spinAnimation(target: Float) {
+        rotationAnim.snapTo(0f)
+        rotationAnim.animateTo(
+            targetValue = target,
+            animationSpec = tween(durationMillis, easing = LinearEasing)
+        )
+    }
+
+    LaunchedEffect(trigger) {
+        if (trigger != null) {
+            val target = if (side == SpinSide.CLOCKWISE) rotationAngle else -rotationAngle
+            if (isInfinite) {
+                while (true) {
+                    spinAnimation(target)
+                }
+            } else {
+                repeat(repeatCount) {
+                    spinAnimation(target)
+                }
+            }
+        }
+    }
+
+    this.graphicsLayer {
+        rotationZ = rotationAnim.value
+    }
+}
