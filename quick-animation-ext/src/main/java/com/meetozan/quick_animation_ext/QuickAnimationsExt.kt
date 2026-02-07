@@ -17,19 +17,31 @@
 
 package com.meetozan.quick_animation_ext
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
@@ -412,5 +424,106 @@ fun Modifier.spin(
 
     this.graphicsLayer {
         rotationZ = rotationAnim.value
+    }
+}
+
+@Composable
+fun SlideInRightFadeIn(
+    modifier: Modifier = Modifier,
+    trigger: Any? = Unit,
+    durationMillis: Int = 300,
+    delayMillis: Int = 0,
+    easing: Easing = LinearOutSlowInEasing,
+    contentAlign: Alignment = Alignment.Center,
+    isHaveExitAnimation: Boolean = false,
+    content: @Composable () -> Unit
+) {
+
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(trigger) {
+        if (delayMillis > 0) {
+            delay(delayMillis.toLong())
+        }
+        isVisible = true
+    }
+
+    AnimatedVisibility(
+        visible = isVisible,
+        modifier = modifier.fillMaxWidth(),
+        enter = slideInHorizontally(
+            initialOffsetX = { fullWidth -> fullWidth },
+            animationSpec = tween(
+                durationMillis = durationMillis,
+                easing = easing
+            )
+        ) + fadeIn(
+            animationSpec = tween(durationMillis = durationMillis)
+        ),
+        exit = if (isHaveExitAnimation) {
+            slideOutHorizontally(
+                targetOffsetX = { fullWidth -> fullWidth },
+                animationSpec = tween(durationMillis = durationMillis)
+            ) + fadeOut()
+        } else {
+            ExitTransition.None
+        }
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = contentAlign
+        ) {
+            content.invoke()
+        }
+    }
+}
+
+@Composable
+fun SlideInLeftFadeIn(
+    modifier: Modifier = Modifier,
+    trigger: Any? = Unit,
+    durationMillis: Int = 300,
+    delayMillis: Int = 0,
+    easing: Easing = LinearOutSlowInEasing,
+    contentAlign: Alignment = Alignment.Center,
+    isHaveExitAnimation: Boolean = false,
+    content: @Composable () -> Unit
+) {
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(trigger) {
+        if (delayMillis > 0) {
+            delay(delayMillis.toLong())
+        }
+        isVisible = true
+    }
+
+    AnimatedVisibility(
+        visible = isVisible,
+        modifier = modifier,
+        enter = slideInHorizontally(
+            initialOffsetX = { fullWidth -> -fullWidth },
+            animationSpec = tween(
+                durationMillis = durationMillis,
+                easing = easing
+            )
+        ) + fadeIn(
+            animationSpec = tween(durationMillis = durationMillis)
+        ),
+        exit = if (isHaveExitAnimation) {
+            slideOutHorizontally(
+                targetOffsetX = { fullWidth -> -fullWidth },
+                animationSpec = tween(durationMillis = durationMillis)
+            ) + fadeOut()
+        } else {
+            ExitTransition.None
+        }
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = contentAlign
+        ) {
+            content.invoke()
+        }
     }
 }

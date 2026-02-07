@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.animation.core)
     implementation(libs.compose.foundation)
+    implementation(libs.androidx.material3)
 }
 
 afterEvaluate {
