@@ -97,7 +97,14 @@ fun Modifier.clickBounceEffect(
             awaitPointerEventScope {
                 while (true) {
                     awaitFirstDown(requireUnconsumed = false)
-                    waitForUpOrCancellation()
+                    isPressed = true
+
+                    val up = waitForUpOrCancellation()
+                    isPressed = false
+
+                    if (up == null) {
+                        continue
+                    }
                 }
             }
         }
