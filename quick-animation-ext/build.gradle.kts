@@ -45,6 +45,8 @@ dependencies {
     implementation(libs.androidx.animation.core)
     implementation(libs.compose.foundation)
     implementation(libs.androidx.material3)
+
+    implementation(project(":quick-animations-lint"))
 }
 
 afterEvaluate {
