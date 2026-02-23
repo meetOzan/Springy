@@ -62,11 +62,16 @@ import androidx.compose.ui.unit.IntSize
 import kotlinx.coroutines.delay
 
 /**
- * A modifier that adds a bounce effect when the composable is clicked.
+ * A modifier that adds a bounce effect when the composable is pressed.
+ *
+ * Recommended for **interactive** elements such as `Button`, `IconButton` or
+ * any composable that already has a click / tap behavior (e.g. `Modifier.clickable`).
+ * You can also use it on other content, but UX‑wise it makes the most sense
+ * when the element is actually clickable.
  *
  * @param scaleDown The scale factor to apply when the composable is pressed. Default is 0.90f (90% of original size).
  *
- * Usage:
+ * Usage (recommended on clickable components):
  * ```
  * Button(
  *     modifier = Modifier.clickBounceEffect(),
@@ -115,6 +120,9 @@ fun Modifier.clickBounceEffect(
  *
  *  The shake can be either **vertical** [Modifier.shakeVertical].
  *
+ *  Best suited for **error / invalid input** feedback, or to draw attention
+ *  to a specific area of the UI (e.g. a form field or card).
+ *
  * @param trigger An optional parameter that can be used to trigger the shake animation. Whenever this value changes, the shake animation will be executed.
  * @param durationMillis The duration of the shake animation in milliseconds. Default is 500ms
  * @param intensity The intensity of the shake, which determines how far the composable will move during the shake. Default is 20f (20 pixels).
@@ -152,6 +160,9 @@ fun Modifier.shakeHorizontal(
  * A modifier that adds a shake effect to the composable with basing [Modifier.baseShake].
  *
  * The shake can be either **horizontal** [Modifier.shakeHorizontal].
+ *
+ * Typically used on components that represent a **row or block of content**
+ * (e.g. cards, containers) to signal attention or error.
  *
  * @param trigger An optional parameter that can be used to trigger the shake animation. Whenever this value changes, the shake animation will be executed.
  * @param durationMillis The duration of the shake animation in milliseconds. Default is 500ms
