@@ -11,8 +11,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/compose-animations" />
             <option value="$PROJECT_DIR$/quick-animation-ext" />
-            <option value="$PROJECT_DIR$/quick-animations-lint" />
           </set>
         </option>
       </GradleProjectSettings>
