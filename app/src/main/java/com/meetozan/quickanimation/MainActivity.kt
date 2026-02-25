@@ -19,21 +19,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            QuickAnimComposeTheme {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Button(
-                        modifier = Modifier.clickBounceEffect(),
-                        onClick = { /*TODO*/ }
-                    ) {
-                        Text(text = "Click Me")
-                    }
-                }
-            }
+            QuickAnimationDemo()
         }
     }
 }
