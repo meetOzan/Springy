@@ -1,6 +1,6 @@
-# QuickAnimationExt
+# Sqringy - Quick Animation Extensions
 
-Beautiful, reusable micro-animations for Jetpack Compose.
+Beautiful, reusable micro-animation extensions for Jetpack Compose.
 
 This repository contains:
 
