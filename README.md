@@ -48,7 +48,7 @@ implementation platform("androidx.compose:compose-bom:<version>")
 implementation "com.github.meetOzan:quick-animation-ext:<release-version>"
 ```
 
-Replace `<version>` with your Compose BOM version and `<release-version>` with the library version (e.g. `0.0.1`).
+Replace `<version>` with your Compose BOM version and `<release-version>` with the library version (e.g. `0.1.1`).
 
 ---
 
