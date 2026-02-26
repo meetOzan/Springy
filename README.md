@@ -7,6 +7,8 @@ This repository contains:
 - **quick-animation-ext** — main animation library (Modifier extensions + composables)
 - **app** — sample app demonstrating all effects
 
+[![](https://jitpack.io/v/meetOzan/Springy.svg)](https://jitpack.io/#meetOzan/Springy)
+
 ---
 
 ## 1. Installation
