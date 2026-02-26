@@ -37,7 +37,7 @@ dependencyResolutionManagement {
 ```kotlin
 dependencies {
     implementation(platform("androidx.compose:compose-bom:<version>"))
-    implementation("com.github.meetOzan:quick-animation-ext:<release-version>")
+    implementation("com.github.meetOzan:Springy:<release-version>")
 }
 ```
 
@@ -45,7 +45,7 @@ dependencies {
 
 ```groovy
 implementation platform("androidx.compose:compose-bom:<version>")
-implementation "com.github.meetOzan:quick-animation-ext:<release-version>"
+implementation "com.github.meetOzan:Springy:<release-version>"
 ```
 
 Replace `<version>` with your Compose BOM version and `<release-version>` with the library version (e.g. `0.1.1`).
