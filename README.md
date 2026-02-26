@@ -8,6 +8,8 @@ This repository contains:
 - **app** — sample app demonstrating all effects
 
 [![](https://jitpack.io/v/meetOzan/Springy.svg)](https://jitpack.io/#meetOzan/Springy)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+
 
 ---
 
